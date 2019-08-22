@@ -1,0 +1,24 @@
+{
+  "name": "FastFoodFast-Express",
+  "version": "1.0.0",
+  "description": "The legendary FastFOODFast App makes a comeback with a node-express API using Postgres",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekumamait/FastFoodFast-Express.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ekumamait/FastFoodFast-Express/issues"
+  },
+  "homepage": "https://github.com/ekumamait/FastFoodFast-Express#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
