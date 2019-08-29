@@ -7,7 +7,7 @@ const User = {
    * Sign-up A User
    * @param {object} req 
    * @param {object} res
-   * @returns {object} reflection object 
+   * @returns {object} User object 
    */
   async signup(req, res) {
     if (!req.body.user_email || !req.body.user_password) {
@@ -33,7 +33,7 @@ const User = {
     try {
       const { rows } = await db.query(createQuery, values);
       const token = Helper.generateToken(rows[0].user_id);
-      return res.status(201).send({ token });
+      return res.status(201).send({ token, 'data': rows });
     } catch(error) {
       if (error.routine === '_bt_check_unique') {
         return res.status(400).send({ 'message': 'User with that EMAIL already exist' })
@@ -43,10 +43,10 @@ const User = {
   },
 
   /**
-   * Login-A-Signed-up-user
+   * Login A User
    * @param {object} req 
    * @param {object} res
-   * @returns {object} user object 
+   * @returns {object} User object 
    */
   async login(req, res) {
     if (!req.body.user_email || !req.body.user_password) {
@@ -59,17 +59,38 @@ const User = {
     try {
       const { rows } = await db.query(text, [req.body.user_email]);
       if (!rows[0]) {
-        return res.status(400).send({'message': 'The credentials you provided is incorrect'});
+        return res.status(400).send({'message': 'The credentials you provided are incorrect'});
       }
       if(!Helper.comparePassword(rows[0].user_password, req.body.user_password)) {
         return res.status(400).send({ 'message': 'The credentials you provided are incorrect' });
       }
       const token = Helper.generateToken(rows[0].user_id);
-      return res.status(200).send({ token });
+      return res.status(200).send({ 'message': 'User logged in successfully', 'data': {'token': token} });
     } catch(error) {
       return res.status(400).send(error)
     }
   },
+
+    /**
+   * Get All Users
+   * @param {object} req 
+   * @param {object} res 
+   * @returns {object} User object
+   */
+  async getAllUsers(req, res) {
+    const getAllQuery = 'SELECT * FROM users';
+    try {
+      const { rows } = await db.query(getAllQuery);
+      if(!rows[0]) {
+        return res.status(404).send({'message': 'No Users found'});
+      }
+      return res.status(200).send({ 'message': 'users list', 'data': rows });
+    } catch(error) {
+      return res.status(400).send(error);
+    }
+  },
+
+
   /**
    * Delete A User
    * @param {object} req 
@@ -79,7 +100,7 @@ const User = {
   async delete(req, res) {
     const deleteQuery = 'DELETE FROM users WHERE user_id=$1 returning *';
     try {
-      const { rows } = await db.query(deleteQuery, [req.user.id]);
+      const { rows } = await db.query(deleteQuery, [req.body.user_id]);
       if(!rows[0]) {
         return res.status(404).send({'message': 'user not found'});
       }

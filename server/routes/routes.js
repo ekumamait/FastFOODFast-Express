@@ -9,6 +9,7 @@ const router = express.Router();
 // Users routes
 router.post('/api/auth/signup', Users.signup);
 router.post('/api/auth/signin', Users.login);
-router.delete('/api/users/:id', Users.delete);
+router.get('/api/users', Users.getAllUsers);
+router.delete('/api/users', Users.delete);
 
 export default router;

@@ -124,10 +124,10 @@ export const dropAllTables = () => {
   dropOrdersTable();
 }
 
-pool.on('remove', () => {
-  console.log('client removed');
-  process.exit(0);
-});
+// pool.connect(() => {
+//   console.log('client removed');
+//   process.exit(0);
+// });
 
   module.exports = {
     createOrdersTable,
