@@ -23,6 +23,31 @@ export const query = (text, params) => {
     })
   }
   
+ 
+/**
+ * Create Meals Table
+ */
+export const createMenuTable = () => {
+  const queryText =
+    `CREATE TABLE IF NOT EXISTS
+      menu(
+        meal_id UUID NOT NULL,
+        meal_name TEXT NOT NULL,
+        meal_description INT NOT NULL,
+        meal_price VARCHAR(128) NOT NULL,
+      )`;
+
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+}
+
 /**
  * Create Orders Table
  */
@@ -31,12 +56,14 @@ export const createOrdersTable = () => {
       `CREATE TABLE IF NOT EXISTS
         orders(
           order_id UUID PRIMARY KEY,
+          meal_id UUID NOT NULL,
           location TEXT NOT NULL,
           quantity INT NOT NULL,
           status TEXT NOT NULL,
           user_id UUID NOT NULL,
           order_date TIMESTAMP,
-          FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+          FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+          FOREIGN KEY (meal_id) REFERENCES menu (meal_id) ON DELETE CASCADE
         )`;
   
     pool.query(queryText)
@@ -75,6 +102,21 @@ export const createUsersTable = () => {
       });
   }
 
+/**
+ * Drop Menu Table
+ */
+export const dropMenuTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS menu returning *';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+}
 
 /**
  * Drop Orders Table
@@ -114,6 +156,7 @@ export const dropUsersTable = () => {
 export const createAllTables = () => {
   createUserTable();
   createOrdersTable();
+  createMenuTable();
 }
 
 /**
@@ -122,6 +165,7 @@ export const createAllTables = () => {
 export const dropAllTables = () => {
   dropUserTable();
   dropOrdersTable();
+  dropMenuTable();
 }
 
 // pool.connect(() => {
@@ -131,10 +175,12 @@ export const dropAllTables = () => {
 
   module.exports = {
     createOrdersTable,
+    createMenuTable,
     createUsersTable,
     createAllTables,
     dropUsersTable,
     dropOrdersTable,
+    dropMenuTable,
     dropAllTables,
     query
   };

@@ -1,5 +1,5 @@
 import uuidv4 from 'uuid/v4';
-import db from '../database/db';
+import db from '../models/db';
 import Helper from './helpers';
 
 const User = {
