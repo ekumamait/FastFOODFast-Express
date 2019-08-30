@@ -31,10 +31,10 @@ export const createMenuTable = () => {
   const queryText =
     `CREATE TABLE IF NOT EXISTS
       menu(
-        meal_id UUID NOT NULL,
-        meal_name TEXT NOT NULL,
-        meal_description INT NOT NULL,
-        meal_price VARCHAR(128) NOT NULL,
+        meal_id UUID PRIMARY KEY NOT NULL,
+        meal_name VARCHAR(100) NOT NULL,
+        meal_description VARCHAR(200) NOT NULL,
+        meal_price VARCHAR(50) NOT NULL
       )`;
 
   pool.query(queryText)
@@ -55,14 +55,14 @@ export const createOrdersTable = () => {
     const queryText =
       `CREATE TABLE IF NOT EXISTS
         orders(
-          order_id UUID PRIMARY KEY,
+          order_id UUID PRIMARY KEY NOT NULL,
           meal_id UUID NOT NULL,
           location TEXT NOT NULL,
           quantity INT NOT NULL,
           status TEXT NOT NULL,
           user_id UUID NOT NULL,
           order_date TIMESTAMP,
-          FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
+          FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
           FOREIGN KEY (meal_id) REFERENCES menu (meal_id) ON DELETE CASCADE
         )`;
   
@@ -84,7 +84,7 @@ export const createUsersTable = () => {
     const queryText =
       `CREATE TABLE IF NOT EXISTS
         users(
-          user_id UUID PRIMARY KEY,
+          user_id UUID PRIMARY KEY NOT NULL,
           user_name TEXT NOT NULL,
           user_email VARCHAR(128) UNIQUE NOT NULL,
           user_password VARCHAR(128) NOT NULL,
@@ -154,7 +154,7 @@ export const dropUsersTable = () => {
  * Create All Tables
  */
 export const createAllTables = () => {
-  createUserTable();
+  createUsersTable();
   createOrdersTable();
   createMenuTable();
 }
@@ -163,7 +163,7 @@ export const createAllTables = () => {
  * Drop All Tables
  */
 export const dropAllTables = () => {
-  dropUserTable();
+  dropUsersTable();
   dropOrdersTable();
   dropMenuTable();
 }
