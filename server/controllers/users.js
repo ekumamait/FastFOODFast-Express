@@ -27,7 +27,7 @@ const User = {
       req.body.user_name,
       req.body.user_email,
       hashPassword,
-      req.body.admin
+      false
     ];
     
     try {
